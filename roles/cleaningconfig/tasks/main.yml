@@ -1,0 +1,15 @@
+---
+# tasks file for cleaningconfig
+- name: deploy cleaning cronjob
+  k8s:
+    validate_certs: no
+    namespace: {{ namespace }}
+    definition: "{{lookup('template', 'cleaning-cronjob.yaml')}}"
+    state: present
+
+- name: deploy set default params cronjob
+  k8s:
+    validate_certs: no
+    namespace: {{ namespace }}
+    definition: "{{lookup('template', 'default-params-cronjob.yaml')}}"
+    state: present

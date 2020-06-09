@@ -1,0 +1,7 @@
+apiVersion: cleaning.ansible-operator.com/v1
+kind: CleaningConfig
+metadata:
+  name: example-cleaningconfig
+spec:
+  # Add fields here
+  size: 3

@@ -1,0 +1,5 @@
+---
+- version: v1
+  group: cleaning.ansible-operator.com
+  kind: CleaningConfig
+  role: cleaningconfig
