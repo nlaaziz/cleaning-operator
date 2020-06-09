@@ -20,7 +20,7 @@ spec:
           - name: busybox
             image: busybox
             command:
-              - sleep
+              - "sleep"
             args:
-              - 10
+              - "10"
           restartPolicy: OnFailure
