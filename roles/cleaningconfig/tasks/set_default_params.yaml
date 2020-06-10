@@ -1,0 +1,35 @@
+- name: fetch list of namespaces
+  k8s_info:
+    kind: Namespace
+  register: projects
+
+- name: label existing namespaces cleaningOperator_protected=true
+  k8s:
+    state: present
+    merge_type: merge
+    definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: "{{ item.metadata.name }}"
+        labels:
+          cleaningOperator_protected: true
+  loop: "{{ projects.resources }}"
+  when: projects.resources.metadata.labels.cleaningOperator_protected is not defined /
+        and protectedByDefault == true
+
+- name: label existing namespaces cleaningOperator_expiry=VAR_defaultExpiry
+  k8s:
+    state: present
+    merge_type: merge
+    definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: "{{ item.metadata.name }}"
+        labels:
+          cleaningOperator_expiry: {{ defaultExpiry }}
+  loop: "{{ projects.resources }}"
+  when: projects.resources.metadata.labels.cleaningOperator_protected is not true /
+        and projects.resources.metadata.labels.cleaningOperator_expiry is not defined /
+        and defaultExpiry is defined

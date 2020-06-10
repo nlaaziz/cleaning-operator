@@ -1,15 +1,7 @@
 ---
 # tasks file for cleaningconfig
-- name: deploy cleaning cronjob
-  k8s:
-    validate_certs: no
-    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
-    definition: "{{lookup('template', 'cleaning-cronjob.yaml')}}"
-    state: present
+- name: set default params
+  import_tasks: set_default_params.yaml
 
-- name: deploy set default params cronjob
-  k8s:
-    validate_certs: no
-    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
-    definition: "{{lookup('template', 'default-params-cronjob.yaml')}}"
-    state: present
+- name: create cronjob related to namespace expiry
+  import_tasks: configure_expiry_cronjob.yaml

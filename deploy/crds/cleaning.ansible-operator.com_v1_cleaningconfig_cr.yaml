@@ -3,6 +3,7 @@ kind: CleaningConfig
 metadata:
   name: example-cleaningconfig
 spec:
-  # Add fields here
-  size: 3
+  protectedByDefault: true
+  defaultExpiry: 10d
+  garbageCollectorFrequency: 30m
 status: {}
