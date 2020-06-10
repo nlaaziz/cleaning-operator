@@ -16,7 +16,8 @@
           cleaningOperator_protected: true
   loop: "{{ projects.resources }}"
   when: projects.resources.metadata.labels.cleaningOperator_protected is not defined /
-        and protectedByDefault == true
+        and protectedByDefault == true /
+        and projects.resources.metadata.labels.cleaningOperator_expiry is not defined
 
 - name: label existing namespaces cleaningOperator_expiry=VAR_defaultExpiry
   k8s:

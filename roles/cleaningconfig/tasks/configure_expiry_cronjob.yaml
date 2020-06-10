@@ -3,6 +3,12 @@
     kind: Namespace
   register: projects
 
+- name: create cleaning configmap
+  k8s:
+    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
+    merge_type: merge
+    definition: "{{lookup('template', 'cronjob_configmap.yaml')}}"
+
 - name: deploy cleaning cronjob
   k8s:
     namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
@@ -11,7 +17,7 @@
       apiVersion: batch/v1beta1
       kind: CronJob
       metadata:
-        name: cleaning-cronjob-{{ item.metadata.name }}
+        name: cleaner
       spec:
         schedule: "*/{{ garbageCollectorFrequency }} * * * *"
         concurrencyPolicy: "Replace"
@@ -29,13 +35,16 @@
                 serviceAccount: cleaning-operator
                 serviceAccountName: cleaning-operator
                 containers:
-                # TODO use image with openshift cli and write deletion script
-                - name: busybox
-                  image: busybox
+                - name: cleaner
+                  image: quay.io/operator-framework/ansible-operator:v0.18.0
                   command:
-                    - "sleep"
-                  args:
-                    - "10"
+                    - "/usr/local/bin/ansible-playbook /srv/mount/playbook.yaml"
+                  volumeMounts:
+                  - name: test
+                    mountPath: /srv/mount
                 restartPolicy: OnFailure
+                volumes:
+                  - name: test
+                    configMap:
+                      name: cleaner-playbook
     state: present
-  loop: "{{ projects.resources }}"

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: cleaner_playbook
+data:
+  playbook.yaml: |
+    - hosts: localhost
+      tasks:
+      - name: fetch list of namespaces
+        k8s_info:
+          kind: Namespace
+          label_selectors :
+            - cleaningOperator_protected = false
+        register: projects
