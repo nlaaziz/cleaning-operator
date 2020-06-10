@@ -13,11 +13,12 @@
       metadata:
         name: "{{ item.metadata.name }}"
         labels:
-          cleaningOperator_protected: true
+          cleaningOperator_protected: "true"
   loop: "{{ projects.resources }}"
-  when: projects.resources.metadata.labels.cleaningOperator_protected is not defined /
-        and protectedByDefault == true /
-        and projects.resources.metadata.labels.cleaningOperator_expiry is not defined
+  when: >
+    item.metadata.labels.cleaningOperator_protected is not defined and
+    protectedByDefault is defined and protectedByDefault == "true" and
+    projects.resources.metadata.labels.cleaningOperator_expiry is not defined
 
 - name: label existing namespaces cleaningOperator_expiry=VAR_defaultExpiry
   k8s:
@@ -29,8 +30,9 @@
       metadata:
         name: "{{ item.metadata.name }}"
         labels:
-          cleaningOperator_expiry: {{ defaultExpiry }}
+          cleaningOperator_expiry: "{{ defaultExpiry }}"
   loop: "{{ projects.resources }}"
-  when: projects.resources.metadata.labels.cleaningOperator_protected is not true /
-        and projects.resources.metadata.labels.cleaningOperator_expiry is not defined /
-        and defaultExpiry is defined
+  when: >
+    item.metadata.labels.cleaningOperator_protected == "true" and
+    item.metadata.labels.cleaningOperator_expiry is not defined and
+    defaultExpiry is defined
