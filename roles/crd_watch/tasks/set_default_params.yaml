@@ -17,9 +17,9 @@
   loop: "{{ projects.resources }}"
   when: >
     item.metadata.labels.cleaningOperator_protected is not defined and
+    item.metadata.labels.cleaningOperator_expiry is not defined and
     cleaningconfig.spec.protectedByDefault is defined and
-    cleaningconfig.spec.protectedByDefault == "true" and
-    item.metadata.labels.cleaningOperator_expiry is not defined
+    cleaningconfig.spec.protectedByDefault == true
 
 - name: label existing namespaces cleaningOperator_protected=false if expiry exists
   k8s:
@@ -50,6 +50,7 @@
           cleaningOperator_expiry: "{{ cleaningconfig.spec.defaultExpiry }}"
   loop: "{{ projects.resources }}"
   when: >
-    item.metadata.labels.cleaningOperator_protected == "false" and
+    item.metadata.labels.cleaningOperator_protected is defined and
+    item.metadata.labels.cleaningOperator_protected == false and
     item.metadata.labels.cleaningOperator_expiry is not defined and
     cleaningconfig.spec.defaultExpiry is defined

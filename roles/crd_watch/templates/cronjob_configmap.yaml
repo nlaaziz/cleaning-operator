@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   creationTimestamp: null
-  name: cleaner_playbook
+  name: cleaner-playbook
 data:
   playbook.yaml: |
     - hosts: localhost
