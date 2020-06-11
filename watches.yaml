@@ -5,5 +5,5 @@
   role: crd_watch
 
 - version: v1
-  kind: namespace
+  kind: Namespace
   role: namespace_watch
