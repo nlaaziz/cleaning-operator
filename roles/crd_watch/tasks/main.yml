@@ -1,0 +1,16 @@
+---
+- name: fetch cleaning config
+  k8s_info:
+    apiVersion: cleaning.ansible-operator.com/v1
+    kind: CleaningConfig
+    name: config
+  register: cleaningconfigs
+
+- set_fact:
+    cleaningconfig={{cleaningconfigs.stdout}}
+
+- name: set default params
+  import_tasks: set_default_params.yaml
+
+- name: create cronjob related to namespace expiry
+  import_tasks: configure_expiry_cronjob.yaml

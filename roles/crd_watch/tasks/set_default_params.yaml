@@ -17,8 +17,25 @@
   loop: "{{ projects.resources }}"
   when: >
     item.metadata.labels.cleaningOperator_protected is not defined and
-    protectedByDefault is defined and protectedByDefault == "true" and
-    projects.resources.metadata.labels.cleaningOperator_expiry is not defined
+    cleaningconfig.spec.protectedByDefault is defined and
+    cleaningconfig.spec.protectedByDefault == "true" and
+    item.metadata.labels.cleaningOperator_expiry is not defined
+
+- name: label existing namespaces cleaningOperator_protected=false if expiry exists
+  k8s:
+    state: present
+    merge_type: merge
+    definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: "{{ item.metadata.name }}"
+        labels:
+          cleaningOperator_protected: "false"
+  loop: "{{ projects.resources }}"
+  when: >
+    item.metadata.labels.cleaningOperator_protected is not defined and
+    item.metadata.labels.cleaningOperator_expiry is defined
 
 - name: label existing namespaces cleaningOperator_expiry=VAR_defaultExpiry
   k8s:
@@ -30,9 +47,9 @@
       metadata:
         name: "{{ item.metadata.name }}"
         labels:
-          cleaningOperator_expiry: "{{ defaultExpiry }}"
+          cleaningOperator_expiry: "{{ cleaningconfig.spec.defaultExpiry }}"
   loop: "{{ projects.resources }}"
   when: >
-    item.metadata.labels.cleaningOperator_protected == "true" and
+    item.metadata.labels.cleaningOperator_protected == "false" and
     item.metadata.labels.cleaningOperator_expiry is not defined and
-    defaultExpiry is defined
+    cleaningconfig.spec.defaultExpiry is defined

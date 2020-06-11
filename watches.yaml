@@ -2,4 +2,8 @@
 - version: v1
   group: cleaning.ansible-operator.com
   kind: CleaningConfig
-  role: cleaningconfig
+  role: crd_watch
+
+- version: v1
+  kind: namespace
+  role: namespace_watch

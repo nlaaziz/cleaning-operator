@@ -1,7 +1,7 @@
 apiVersion: cleaning.ansible-operator.com/v1
 kind: CleaningConfig
 metadata:
-  name: example-cleaningconfig
+  name: config
 spec:
   protectedByDefault: true
   defaultExpiry: 10d

@@ -1,7 +1,0 @@
----
-# tasks file for cleaningconfig
-- name: set default params
-  import_tasks: set_default_params.yaml
-
-- name: create cronjob related to namespace expiry
-  import_tasks: configure_expiry_cronjob.yaml

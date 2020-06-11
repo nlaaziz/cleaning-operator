@@ -19,7 +19,7 @@
       metadata:
         name: cleaner
       spec:
-        schedule: "*/{{ garbageCollectorFrequency }} * * * *"
+        schedule: "*/{{ cleaningconfig.spec.garbageCollectorFrequency }} * * * *"
         concurrencyPolicy: "Replace"
         startingDeadlineSeconds: 200
         suspend: true
