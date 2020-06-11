@@ -6,4 +6,4 @@
 
 - version: v1
   kind: Namespace
-  role: namespace_watch
+  role: crd_watch

@@ -19,10 +19,10 @@
       metadata:
         name: cleaner
       spec:
-        schedule: "*/{{ cleaningconfig.spec.garbageCollectorFrequency }} * * * *"
+        schedule: "*/{{ cleaningconfig.spec.garbageCollectorFrequency | regex_replace('m', '')  }} * * * *"
         concurrencyPolicy: "Replace"
         startingDeadlineSeconds: 200
-        suspend: true
+        suspend: false
         successfulJobsHistoryLimit: 3
         failedJobsHistoryLimit: 1
         jobTemplate:
@@ -38,7 +38,9 @@
                 - name: cleaner
                   image: quay.io/operator-framework/ansible-operator:v0.18.0
                   command:
-                    - "/usr/local/bin/ansible-playbook /srv/mount/playbook.yaml"
+                    - "/usr/local/bin/ansible-playbook"
+                  args:
+                    - "/srv/mount/playbook.yaml"
                   volumeMounts:
                   - name: test
                     mountPath: /srv/mount
