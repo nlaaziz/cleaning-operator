@@ -17,9 +17,12 @@ This operator is in the developement process
 
 ## USAGE
 
-By the default namespaces will be labeled as protected
+By default, namespaces will be labeled as protected
+
+```cleaningOperator_protected: "true"```
 
 ##### create a namespace:
+
 ```
 apiVersion: v1
 kind: Namespace
@@ -32,11 +35,11 @@ metadata:
 
 ##### to unprotect your namespace
 
-cleaningOperator_protected: "false
+```cleaningOperator_protected: "false"```
 
 ##### define expiry in days
 
-cleaningOperator_expiry: 5d
+```cleaningOperator_expiry: 5d```
 
 
 ## ansible based openshift operators documentation:
