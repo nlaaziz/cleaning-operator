@@ -1,3 +1,6 @@
+![Docker Image CI](https://github.com/nlaaziz/cleaning-operator/workflows/Docker%20Image%20CI/badge.svg)
+
+
 # cleaning-operator
 
 DockerHub cleaning-operator image url:
