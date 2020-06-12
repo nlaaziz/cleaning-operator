@@ -42,11 +42,11 @@
                   args:
                     - "/srv/mount/playbook.yaml"
                   volumeMounts:
-                  - name: test
+                  - name: cleaner-playbook
                     mountPath: /srv/mount
                 restartPolicy: OnFailure
                 volumes:
-                  - name: test
+                  - name: cleaner-playbook
                     configMap:
                       name: cleaner-playbook
     state: present

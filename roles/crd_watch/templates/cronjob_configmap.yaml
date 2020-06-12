@@ -1,7 +1,8 @@
+# we don't want to build an image for CronJob
+# put ansible code in configmap and mount it to cronjob pod
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  creationTimestamp: null
   name: cleaner-playbook
 data:
   playbook.yaml: |
@@ -13,3 +14,43 @@ data:
           label_selectors :
             - cleaningOperator_protected = false
         register: projects
+
+      - name: compare namespace dates
+        shell: "/usr/bin/python3.6 /srv/mount/date_comparison_script.py {{ '{{' }} item.metadata.creationTimestamp {{ '}}' }} {{ '{{' }} item.metadata.labels.cleaningOperator_expiry | regex_replace('d', '') {{ '}}' }}"
+        loop: "{{ '{{' }} projects.resources {{ '}}' }}"
+        register: date_comparison_status
+
+      - name: display expired namespaces
+        k8s_info:
+          kind: Namespace
+          name: "{{ '{{' }} item.item.metadata.name {{ '}}' }}"
+        loop: "{{ '{{' }} date_comparison_status.results {{ '}}' }}"
+        when:
+          item.stdout == "True"
+
+      - name: delete expired namespaces
+        k8s:
+          state: absent
+          definition:
+            kind: Namespace
+            apiVersion: v1
+            metadata:
+              name: "{{ '{{' }} item.item.metadata.name {{ '}}' }}"
+        loop: "{{ '{{' }} date_comparison_status.results {{ '}}' }}"
+        when:
+          item.stdout == "True"
+
+
+  date_comparison_script.py: |
+    import sys
+    from datetime import datetime,timedelta, date
+
+    current_date = datetime.strptime(datetime.today().strftime('%Y-%m-%d-%H:%M:%S'), '%Y-%m-%d-%H:%M:%S')
+
+    namespace_creation_date = datetime.strptime(sys.argv[1], '%Y-%m-%dT%H:%M:%SZ')
+    namespace_exiry = sys.argv[2]
+    end_date = namespace_creation_date + timedelta(days=int(namespace_exiry))
+
+    # compare dates
+
+    print(end_date < current_date)
