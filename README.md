@@ -17,11 +17,35 @@ This operator is in the developement process
 
 ## USAGE
 
-By default, namespaces will be labeled as protected
+#### Create an EphemeralNamespace resource
 
-```cleaningOperator_protected: "true"```
+```
+apiVersion: v1
+kind: EphemeralNamespace
+metadata:
+  name: ephemeral-ns-test
+spec:
+  expiry: 5d
+```
 
-##### create a namespace:
+#### A namespace associated to the EphemeralNamespace resource is created with labels
+
+```
+cleaningOperator_protected: "false"
+cleaningOperator_expiry: 5d
+```
+
+After 5 days the namespace will be deleted.
+
+###### TODO only days is supported, integrate hours, minutes
+
+By default, all existing namespaces will be labeled as protected
+
+```
+cleaningOperator_protected: "true"
+```
+
+#### You can also label an existing namespace to be cleaned by cleaning-operator:
 
 ```
 apiVersion: v1
@@ -33,14 +57,17 @@ metadata:
   name: test
 ```
 
-##### to unprotect your namespace
+###### To unprotect your namespace
 
-```cleaningOperator_protected: "false"```
+```
+cleaningOperator_protected: "false"
+```
 
-##### define expiry in days
+###### define expiry in days
 
-```cleaningOperator_expiry: 5d```
-
+```
+cleaningOperator_expiry: 5d
+```
 
 ## ansible based openshift operators documentation:
 
