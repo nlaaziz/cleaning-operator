@@ -7,3 +7,8 @@
 - version: v1
   kind: Namespace
   role: crd_watch
+
+- version: v1
+  group: cleaning.ansible-operator.com
+  kind: EphemeralNamespace
+  role: ephemeral_namespace_watch

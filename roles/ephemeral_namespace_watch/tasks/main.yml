@@ -1,0 +1,21 @@
+---
+- name: fetch ephemeral namespaces
+  k8s_info:
+    api_version: cleaning.ansible-operator.com/v1
+    kind: EphemeralNamespace
+    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
+  register: ephemeral_namespaces
+
+- name: create namespaces related to ephemeralnamespaces
+  k8s:
+    state: present
+    merge_type: merge
+    definition:
+      kind: Namespace
+      apiVersion: v1
+      metadata:
+        name: "{{ item.metadata.name }}"
+        labels:
+          cleaningOperator_protected: "false"
+          cleaningOperator_expiry: "{{ item.spec.expiry }}"
+  loop: "{{ ephemeral_namespaces.resources }}"

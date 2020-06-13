@@ -1,0 +1,6 @@
+apiVersion: cleaning.ansible-operator.com/v1
+kind: EphemeralNamespace
+metadata:
+  name: namespace-test
+spec:
+  expiry: 10d

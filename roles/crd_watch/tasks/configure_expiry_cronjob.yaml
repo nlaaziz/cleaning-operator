@@ -3,11 +3,26 @@
     kind: Namespace
   register: projects
 
+- name: fetch list of cleaning jobs
+  k8s_info:
+    api_version: "batch/v1"
+    kind: jobs
+    label_selectors:
+      - "parent = cleaning-jobs"
+  register: jobs
+
 - name: create cleaning configmap
   k8s:
     namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
     merge_type: merge
     definition: "{{lookup('template', 'cronjob_configmap.yaml')}}"
+
+- name: delete existing jobs
+  k8s:
+    status: absent
+    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
+    name: "{{ item.metadata.name }}"
+  loop: "{{ jobs.resources }}"
 
 - name: deploy cleaning cronjob
   k8s:

@@ -5,6 +5,7 @@ metadata:
 subjects:
 - kind: ServiceAccount
   name: cleaning-operator
+  namespace: cleaning-operator
 roleRef:
   kind: ClusterRole
   name: cluster-admin
