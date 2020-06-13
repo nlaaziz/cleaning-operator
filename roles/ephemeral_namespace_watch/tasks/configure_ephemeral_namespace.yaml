@@ -72,6 +72,9 @@
                   args:
                     - "/srv/mount/playbook.yaml"
                     - "--extra-vars='eph_namespace={{ item.item.metadata.name }}'"
+                  env:
+                    - key: WATCH_NAMESPACE
+                      value: "{{ lookup('env','WATCH_NAMESPACE') }}"
                   volumeMounts:
                   - name: ephemeralnamespace-cleaner-playbook
                     mountPath: /srv/mount

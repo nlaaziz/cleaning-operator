@@ -16,3 +16,12 @@ data:
             apiVersion: v1
             metadata:
               name: "{{ '{{' }} eph_namespace {{ '}}' }}"
+      - name: delete associated cleaning cronjob
+        k8s:
+          state: absent
+          namespace: "{{ '{{' }} lookup('env','WATCH_NAMESPACE') {{ '}}' }}"
+          definition:
+            apiVersion: batch/v1beta1
+            kind: CronJob
+            metadata:
+              name: "{{ '{{' }} eph_namespace {{ '}}' }}-cleaner"
