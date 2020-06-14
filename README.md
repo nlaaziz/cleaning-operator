@@ -16,6 +16,27 @@ The operator ensures that the outdated namespaces are deleted.
 
 The operator is in the developement process
 
+## INSTALLATION
+
+#### shell
+
+```
+sh install.sh
+```
+
+#### ansible k8s module
+
+```
+git clone https://github.com/nlaaziz/openshift_config_automation/blob/master/configure_cluster.yaml
+ansible-playbook configure-cluster.yaml -e "config=CleaningOperator"
+```
+
+#### helm
+
+```
+In developement
+```
+
 ## USAGE
 
 #### Create an EphemeralNamespace resource
