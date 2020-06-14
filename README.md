@@ -77,11 +77,7 @@ NAME                        SCHEDULE        SUSPEND   ACTIVE   LAST SCHEDULE   A
 ephemeral-ns-test-cleaner   40 01 19 06 *   False     0        <none>          76s
 ```
 
-After 5 days the namespace will be deleted.
-
-```
-cleaningOperator_protected: "true"
-```
+#### After 5 days the namespace will be deleted.
 
 #### You can also attach an existing namespace to an ephemeralnamespace:
 #### label your namespace
