@@ -66,28 +66,22 @@ By default, all existing namespaces will be labeled as protected
 cleaningOperator_protected: "true"
 ```
 
-#### You can also label an existing namespace to be cleaned by cleaning-operator:
+#### You can also attach an existing namespace to an ephemeralnamespace:
+#### label your namespace
 
 ```
-apiVersion: v1
-kind: Namespace
+oc label namespace test-namespace cleaningOperator_ephemeralnamespace=true
+```
+
+#### create an ephemeralnamespace with the same namespace name
+
+```
+apiVersion: cleaning.ansible-operator.com/v1
+kind: EphemeralNamespace
 metadata:
-  labels:
-    cleaningOperator_protected: "false"
-    cleaningOperator_expiry: 5d
-  name: test
-```
-
-###### To unprotect your namespace
-
-```
-cleaningOperator_protected: "false"
-```
-
-###### define expiry in days
-
-```
-cleaningOperator_expiry: 5d
+  name: test-namespace
+spec:
+  expiry: 154d
 ```
 
 ## ansible based openshift operators documentation:

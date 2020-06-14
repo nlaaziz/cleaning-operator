@@ -1,9 +1,0 @@
-apiVersion: cleaning.ansible-operator.com/v1
-kind: CleaningConfig
-metadata:
-  name: config
-spec:
-  protectedByDefault: true
-  defaultExpiry: 10d
-  garbageCollectorFrequency: 30m
-status: {}

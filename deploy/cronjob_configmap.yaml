@@ -15,5 +15,5 @@ data:
             kind: EphemeralNamespace
             apiVersion: cleaning.ansible-operator.com/v1
             metadata:
-              name: "{{ '{{' }} lookup('env','EPHEMERAL_NAMESPACE') {{ '}}' }}"
-              namespace: "{{ '{{' }} lookup('env','WATCH_NAMESPACE') {{ '}}' }}"
+              name: "{{ lookup('env','EPHEMERAL_NAMESPACE') }}"
+              namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
