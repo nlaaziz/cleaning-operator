@@ -58,10 +58,6 @@ ephemeral-ns-test-cleaner   40 01 19 06 *   False     0        <none>          7
 
 After 5 days the namespace will be deleted.
 
-###### TODO only days is supported, integrate hours, minutes
-
-By default, all existing namespaces will be labeled as protected
-
 ```
 cleaningOperator_protected: "true"
 ```
