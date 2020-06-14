@@ -7,18 +7,20 @@
     namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
   register: ephemeral_namespaces
 
-- name: fetch ephemeral namespaces
+- name: fetch namespaces
   k8s_info:
     kind: namespace
     namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
     label_selectors:
-      - cleaningOperator_ephemeralnamespace = "true"
+      - "cleaningOperator_ephemeralnamespace = true"
   register: namespaces
 
 # new ephemeral_namespace created => create associated namespace
-- import_playbook: configure_ephemeral_namespace.yaml
+- name: create namespace associated to ephemeralnamespace
+  import_tasks: configure_ephemeral_namespace.yaml
   when: namespaces.resources|length < ephemeral_namespaces.resources|length
 
 # an ephemeral_namespace deleted => delete associated namespace
-- import_playbook: delete_ephemeral_namespace_conf.yaml
+- name: delete namespace associated to ephemeralnamespace
+  import_tasks: delete_ephemeral_namespace_conf.yaml
   when: namespaces.resources|length > ephemeral_namespaces.resources|length

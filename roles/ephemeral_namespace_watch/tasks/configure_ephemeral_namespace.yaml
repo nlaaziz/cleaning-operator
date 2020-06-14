@@ -1,18 +1,3 @@
-- name: fetch ephemeral namespaces
-  k8s_info:
-    api_version: cleaning.ansible-operator.com/v1
-    kind: EphemeralNamespace
-    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
-  register: ephemeral_namespaces
-
-- name: fetch ephemeral namespaces
-  k8s_info:
-    kind: namespace
-    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
-    label_selectors:
-      - cleaningOperator_ephemeralnamespace = "true"
-  register: namespaces
-
 - name: create namespaces related to ephemeralnamespaces
   k8s:
     state: present
@@ -35,9 +20,9 @@
     definition: "{{lookup('template', 'cronjob_configmap.yaml')}}"
 
 - name: get schedule time
-  shell: "/usr/bin/python3.6 /opt/ansible/roles/ephemeral_namespace_watch/files/generate_schedule_param.py {{ item.metadata.creationTimestamp }} {{ cleaningconfig.spec.expiry | regex_replace('d', '')  }}"
+  shell: "/usr/bin/python3.6 /opt/ansible/roles/ephemeral_namespace_watch/files/generate_schedule_param.py {{ item.metadata.creationTimestamp }} {{ item.spec.expiry | regex_replace('d', '')  }}"
   register: schedule_time
-  loop: "{{ namespaces.resources }}"
+  loop: "{{ ephemeral_namespaces.resources }}"
 
 - name: deploy cleaning cronjob
   k8s:
