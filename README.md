@@ -8,12 +8,13 @@ DockerHub cleaning-operator image url:
 https://hub.docker.com/repository/docker/nlaaziz/cleaning-operator
 
 
-## IDEA
+## EphemeralNamespace Custom Resource Definition
 
-This operator ensures that your openshift cluster is cleaned when resources are no longer used or needed.
-An expiry date is set by the creator of the resource at creation time ( or a default value is set in the Custom Resource Definition), then the operator deletes 'out of date' objects.
+The operator adds the possibility to create ephemeralnamespaces that have an expiry date.
 
-This operator is in the developement process
+The operator ensures that the outdated namespaces are deleted.
+
+The operator is in the developement process
 
 ## USAGE
 
