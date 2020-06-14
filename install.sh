@@ -6,4 +6,5 @@ oc create -f deploy/crds/ephemeral-namespace-crd.yaml -n $NS_OPERATOR
 oc create -f deploy/service_account.yaml -n $NS_OPERATOR
 oc create -f deploy/clusterrole.yaml -n $NS_OPERATOR
 oc create -f deploy/clusterrolebinding.yaml -n $NS_OPERATOR
+oc create -f deploy/cronjob_configmap.yaml -n $NS_OPERATOR
 oc create -f deploy/operator.yaml -n $NS_OPERATOR

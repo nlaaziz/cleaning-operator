@@ -13,12 +13,6 @@
           cleaningOperator_ephemeralnamespace: "true"
   loop: "{{ ephemeral_namespaces.resources }}"
 
-- name: create cleaning configmap
-  k8s:
-    namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
-    merge_type: merge
-    definition: "{{lookup('template', 'cronjob_configmap.yaml')}}"
-
 - name: get schedule time
   shell: "/usr/bin/python3.6 /opt/ansible/roles/ephemeral_namespace_watch/files/generate_schedule_param.py {{ item.metadata.creationTimestamp }} {{ item.spec.expiry | regex_replace('d', '')  }}"
   register: schedule_time
@@ -60,10 +54,11 @@
                     - "/usr/local/bin/ansible-playbook"
                   args:
                     - "/srv/mount/playbook.yaml"
-                    - "--extra-vars='eph_namespace={{ item.item.metadata.name }}'"
                   env:
                     - name: WATCH_NAMESPACE
                       value: "{{ lookup('env','WATCH_NAMESPACE') }}"
+                    - name: EPHEMERAL_NAMESPACE
+                      value: "{{ item.item.metadata.name }}"
                   volumeMounts:
                   - name: ephemeralnamespace-cleaner-playbook
                     mountPath: /srv/mount

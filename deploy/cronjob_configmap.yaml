@@ -1,0 +1,19 @@
+# we don't want to build an image for CronJob
+# put ansible code in configmap and mount it to cronjob pod
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ephemeralnamespace-cleaner-playbook
+data:
+  playbook.yaml: |
+    - hosts: localhost
+      tasks:
+      - name: delete ephemeral namespace
+        k8s:
+          state: absent
+          definition:
+            kind: EphemeralNamespace
+            apiVersion: cleaning.ansible-operator.com/v1
+            metadata:
+              name: "{{ '{{' }} lookup('env','EPHEMERAL_NAMESPACE') {{ '}}' }}"
+              namespace: "{{ '{{' }} lookup('env','WATCH_NAMESPACE') {{ '}}' }}"

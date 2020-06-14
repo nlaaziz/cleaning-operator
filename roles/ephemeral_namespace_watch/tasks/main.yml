@@ -29,9 +29,3 @@
   import_tasks: configure_ephemeral_namespace.yaml
   when: namespaces.resources|length < ephemeral_namespaces.resources|length or
         cronjobs.resources|length < ephemeral_namespaces.resources|length
-
-# an ephemeral_namespace deleted => delete associated namespace and cronjob
-- name: delete namespace associated to ephemeralnamespace
-  import_tasks: delete_ephemeral_namespace_conf.yaml
-  when: namespaces.resources|length > ephemeral_namespaces.resources|length or
-        cronjobs.resources|length > ephemeral_namespaces.resources|length
