@@ -20,7 +20,7 @@ This operator is in the developement process
 #### Create an EphemeralNamespace resource
 
 ```
-apiVersion: v1
+apiVersion: cleaning.ansible-operator.com/v1
 kind: EphemeralNamespace
 metadata:
   name: ephemeral-ns-test
@@ -28,11 +28,31 @@ spec:
   expiry: 5d
 ```
 
+```
+oc create -f test-ephemeralnamespace.yaml
+ephemeralnamespace.cleaning.ansible-operator.com/ephemeral-ns-test created
+```
+
 #### A namespace associated to the EphemeralNamespace resource is created with labels
 
 ```
 cleaningOperator_protected: "false"
 cleaningOperator_expiry: 5d
+cleaningOperator_ephemeralnamespace: "true"
+```
+
+```
+$ oc get namespace ephemeral-ns-test --show-labels
+NAME                STATUS   AGE   LABELS
+ephemeral-ns-test   Active   18s   cleaningOperator_ephemeralnamespace=true,cleaningOperator_expiry=5d,cleaningOperator_protected=false
+```
+
+#### A deletion cronjob associated to the EphemeralNamespace resource is created
+
+```
+$ oc get cronjobs.batch ephemeral-ns-test-cleaner
+NAME                        SCHEDULE        SUSPEND   ACTIVE   LAST SCHEDULE   AGE
+ephemeral-ns-test-cleaner   40 01 19 06 *   False     0        <none>          76s
 ```
 
 After 5 days the namespace will be deleted.

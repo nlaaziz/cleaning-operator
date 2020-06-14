@@ -25,16 +25,18 @@
   loop: "{{ ephemeral_namespaces.resources }}"
 
 - name: deploy cleaning cronjob
+  loop: "{{ schedule_time.results }}"
   k8s:
     namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
     merge_type: merge
-    loop: "{{ schedule_time.results }}"
+    state: present
     definition:
-      state: present
       apiVersion: batch/v1beta1
       kind: CronJob
       metadata:
         name: "{{ item.item.metadata.name }}-cleaner"
+      labels:
+        cronjob-name: ephemeralnamespace-cleaning-jobs
       spec:
         schedule: "{{ item.stdout }}"
         concurrencyPolicy: "Replace"
@@ -47,7 +49,7 @@
             template:
               metadata:
                 labels:
-                  parent: "cleaning-jobs"
+                  parent: "ephemeralnamespace-cleaning-jobs"
               spec:
                 serviceAccount: cleaning-operator
                 serviceAccountName: cleaning-operator
