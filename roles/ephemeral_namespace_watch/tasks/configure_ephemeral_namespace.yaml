@@ -28,7 +28,9 @@
   k8s:
     namespace: "{{ lookup('env','WATCH_NAMESPACE') }}"
     merge_type: merge
+    loop: "{{ schedule_time.results }}"
     definition:
+      state: present
       apiVersion: batch/v1beta1
       kind: CronJob
       metadata:
@@ -58,7 +60,7 @@
                     - "/srv/mount/playbook.yaml"
                     - "--extra-vars='eph_namespace={{ item.item.metadata.name }}'"
                   env:
-                    - key: WATCH_NAMESPACE
+                    - name: WATCH_NAMESPACE
                       value: "{{ lookup('env','WATCH_NAMESPACE') }}"
                   volumeMounts:
                   - name: ephemeralnamespace-cleaner-playbook
@@ -68,5 +70,3 @@
                   - name: ephemeralnamespace-cleaner-playbook
                     configMap:
                       name: ephemeralnamespace-cleaner-playbook
-    state: present
-    loop: "{{ schedule_time.results }}"
